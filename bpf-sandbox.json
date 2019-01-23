@@ -40,6 +40,7 @@
       " -- <wait>",
       "<enter><wait>"
     ],
+    "type": "qemu", 
     "boot_wait": "10s",
     "disk_size": "{{ user `disk_size`}}",
     "headless": "false",
@@ -53,8 +54,9 @@
     "ssh_port": 22,
     "ssh_username": "vagrant",
     "ssh_wait_timeout": "120m",
-    "type": "qemu",
     "vm_name": "ubuntu-18.04",
+    "format": "qcow2",
+    "accelerator": "kvm",
     "qemuargs": [
       [
         "-m",
@@ -69,7 +71,23 @@
   "provisioners": [
     {
       "type": "ansible",
-      "playbook_file": "./provision.yml"
+      "playbook_file": "./provision.yml",
+      "user": "vagrant",
+      "extra_arguments": [
+        "--become-method=sudo",
+        "--extra-vars",
+        "ansible_become_pass=vagrant"
+      ]
+    },
+    {
+      "type": "shell",
+      "script": "vagrant-defaults.sh"
+    }
+  ],
+  "post-processors": [
+    {
+      "type": "vagrant",
+      "keep_input_artifact": true
     }
   ]
 }
