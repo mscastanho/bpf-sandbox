@@ -71,7 +71,7 @@
   "provisioners": [
     {
       "type": "ansible",
-      "playbook_file": "./provision.yml",
+      "playbook_file": "./ansible/provision.yml",
       "user": "vagrant",
       "extra_arguments": [
         "--become-method=sudo",
@@ -81,7 +81,11 @@
     },
     {
       "type": "shell",
-      "script": "vagrant-defaults.sh"
+      "execute_command": "echo vagrant | sudo -S sh -c '{{ .Vars }} {{ .Path }}'",
+      "scripts": [
+        "./scripts/vagrant-defaults.sh",
+        "./scripts/network.sh"
+      ]
     }
   ],
   "post-processors": [
